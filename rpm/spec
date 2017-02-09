@@ -24,4 +24,5 @@ make install
 %files
 /usr/share/man/cat5/sandscript-map-extension.5
 /usr/local/sandvine/loadable/sandscript-map-extension.so
+/usr/local/sandvine/etc/versions/Map-Extension
 

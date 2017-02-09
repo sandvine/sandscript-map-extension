@@ -1,12 +1,31 @@
 #!/bin/bash
 gcc -I . sandscript-library-interface/dump-shared-library-contents.c  -ldl
 exec >sandscript-map-extension.5
-echo "sandscript-map-extension"
-echo "=============="
-echo
-echo "The primary documentation is in the gitbook/pdf. This"
-echo "is intended as a quick reference"
-echo
-LD_LIBRARY_PATH=$PWD ./a.out ./sandscript-map-extension.so
-#| sed -e '/m->version/d' -e '0,/^----/s//\n\nEvents\n------\n\n----/'
+cat << EOF
+sandscript-map-extension
+========================
+
+For the map names, a file name is used
+If the file path is absolute [starts with a /]
+it is used as-is.  If the path is just a file name
+then it is placed in /usr/local/sandvine/etc/
+
+This is intended to be used only on instance-0
+So some policy like:
+
+    integer inst
+    set inst = extension.map.instance()
+
+    PolicyGroup expr(inst = 0) all {
+        set ign = extension.map.zero("foo.map")
+        set ign = extension.map.add("foo.map","This is a line")
+    }
+
+Note: on the extension.map.reload(), the first parameter
+is the map to reload, the second is the instance (or -1 for
+all instances) to reload on. **NEITHER IS CURRENTLY IMPLEMENTED**
+Calling this method will reload all maps on all instances.
+
+EOF
+LD_LIBRARY_PATH=$PWD ./a.out ./sandscript-map-extension.so | sed -e '/m->version/d' -e '0,/^----/s//\n\nEvents\n------\n\n----/'
 

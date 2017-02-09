@@ -17,7 +17,7 @@ all: deps sandscript-map-extension.so
 
 version:
 	@install -m 0755 -d $(DESTDIR)/usr/local/sandvine/etc/versions
-	@echo svproduct_id=810 > $(DESTDIR)/usr/local/sandvine/etc/versions/ZeroMQ
+	@echo svproduct_id=809 > $(DESTDIR)/usr/local/sandvine/etc/versions/Map-Extension
 	@echo svproduct_major=$(VMAJOR) >> $(DESTDIR)/usr/local/sandvine/etc/versions/Map-Extension
 	@echo svproduct_minor=$(VMINOR) >> $(DESTDIR)/usr/local/sandvine/etc/versions/Map-Extension
 	@echo svproduct_patch=$(VBUILD) >> $(DESTDIR)/usr/local/sandvine/etc/versions/Map-Extension
