@@ -1,0 +1,12 @@
+#!/bin/bash
+gcc -I . sandscript-library-interface/dump-shared-library-contents.c  -ldl
+exec >sandscript-map-extension.5
+echo "sandscript-map-extension"
+echo "=============="
+echo
+echo "The primary documentation is in the gitbook/pdf. This"
+echo "is intended as a quick reference"
+echo
+LD_LIBRARY_PATH=$PWD ./a.out ./sandscript-map-extension.so
+#| sed -e '/m->version/d' -e '0,/^----/s//\n\nEvents\n------\n\n----/'
+

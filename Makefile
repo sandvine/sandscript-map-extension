@@ -8,8 +8,8 @@ export COMPILED = $(shell date -u +"%Y%m%dT%H%M%SZ")
 export COPTS = -O1 -g
 export CFLAGS += $(COPTS) -D _GNU_SOURCE \
                         -DCOMPILE_DATE=\"$(COMPILED)\" \
-                        -DSANDSCRIPT_ZMQ_VERSION=\"$(VERSION)\" \
-                        -DSANDSCRIPT_ZMQ_GITCOMMIT=\"$(shell git rev-parse HEAD)\"
+                        -DSANDSCRIPT_MAP_EXTENSION_VERSION=\"$(VERSION)\" \
+                        -DSANDSCRIPT_MAP_EXTENSION_GITCOMMIT=\"$(shell git rev-parse HEAD)\"
 
 SRCS = sandscript-map-extension.c
 
@@ -42,7 +42,7 @@ sandscript-map-extension.so: sandscript-map-extension.c
 	$(CC) $(CFLAGS) -fPIC -Wall -shared -o $@ $(SRCS) -lpthread
 
 clean:
-	@rm -rf sandscript-map-extension.so sandscript-map-extension.5
+	@rm -rf sandscript-map-extension.so sandscript-map-extension.5 a.out
 	@(cd tests; $(MAKE) clean)
 
 rpm-release:
