@@ -1,0 +1,34 @@
+cache:
+  key: "$CI_BUILD_REF"
+  untracked: true
+  paths:
+  - sandscript-library-interface/*
+  - sandscript-map-extension.so
+
+rpm:
+  tags:
+  - centos_build:7
+  stage: build
+  script:
+  - rm -rf sandscript-library-interface
+  - make clean
+  - make -j4
+  - make rpm-release
+
+  artifacts:
+    paths:
+    - sandscript-map-extension*.rpm
+
+#unittest:
+#  tags:
+#  - centos_build:7
+######  stage: test
+#  before_script:
+#  - yum -y install openpgm-devel python34-devel python34-Cython
+#  script:
+#  - yum -y install sandscript-zmq*.rpm
+#  - LD_LIBRARY_PATH=$PWD/czmq/src/.libs:$PWD/libzmq/src/.libs && cd tests && make && ./unit-test
+#  only:
+#  - master
+#
+
