@@ -1,0 +1,27 @@
+Summary: SandScript extended maps
+Name: sandscript-map-extension
+Version: $VERSION
+Release: 1
+Vendor: Sandvine
+License: Apache 2.0
+Group: Utilities
+URL: https://www.sandvine.com
+Packager: Don Bowman <don@sandvine.com>
+Source: %{name}-%{version}.tar.gz
+
+%description
+This package provides an integration between Sandvine's
+Policy Engine, and the policy maps (read/write/updatea)
+
+%prep
+%setup -q -c -n %{name}-%{version}
+
+%define _unpackaged_files_terminate_build 0
+
+%install
+make install
+
+%files
+/usr/share/man/cat5/sandscript-map-extension.5
+/usr/local/sandvine/loadable/sandscript-map-extension.so
+

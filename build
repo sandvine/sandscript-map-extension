@@ -1,0 +1,15 @@
+#!/bin/bash
+
+
+if [ ! -f /.dockerenv ]; then
+    docker inspect centos-build >/dev/null 2>&1 || (echo "Build centos-build image"; cd docker-build; docker build -t centos-build .)
+    echo "Run script inside docker"
+    docker run --dns=8.8.8.8 -it --rm  -v $PWD:/home/root centos-build /home/root/build
+else
+    set -e
+    echo "Do build"
+    cd $(dirname "$0")
+    make -j4
+    ./gen-quick-ref
+    make rpm-release
+fi
