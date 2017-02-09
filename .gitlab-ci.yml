@@ -12,7 +12,7 @@ rpm:
   script:
   - rm -rf sandscript-library-interface
   - make clean
-  - make -j4
+  - make
   - make rpm-release
 
   artifacts:
