@@ -179,7 +179,7 @@ map_remove(psl_Value *ResultLocation, const psl_Value *const *Arguments)
     path =_getPath(&Arguments[0]->s);
     if (!path)
         return false;
-    pathn = malloc(strlen(path) + 4);
+    pathn = malloc(strlen(path) + 5);
     if (pathn)
     {
         sprintf(pathn, "%s.bak", path);
