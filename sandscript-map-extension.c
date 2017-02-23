@@ -238,10 +238,11 @@ map_reload(psl_Value *ResultLocation, const psl_Value *const *Arguments)
     int status;
     if (pid == 0)
     {
-        char *argv[3];
+        char *argv[4];
         argv[0] = "pdbClient";
         argv[1] = "-c";
         argv[2] = "devices/policyMaps/1/config/reloading true";
+        argv[3] = 0;
         execve("/usr/local/sandvine/bin/pdbClient.bin",argv,environ);
     }
     waitpid(pid, &status, 0);
