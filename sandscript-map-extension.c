@@ -25,6 +25,7 @@ psl_GetManifest GetManifest;
 
 static psl_Function map_zero;
 static psl_Function map_add;
+static psl_Function map_remove;
 static psl_Function map_reload;
 static psl_Function map_instance;
 
@@ -46,6 +47,16 @@ const psl_FunctionDescription map_add_fn = {
     psl_integer,                   // return type
     NELEM(map_add_args),           // length of arguments list
     map_add_args                   // the list of argument types above
+};
+
+const psl_DataType map_remove_args [] = {psl_string,psl_string};
+const psl_FunctionDescription map_remove_fn = {
+    "extension.map.remove",        // SandScript name
+    psl_Flag_Pure,                 // flags. Currently only Pure is available.
+    map_remove,                    // function to call
+    psl_integer,                   // return type
+    NELEM(map_remove_args),        // length of arguments list
+    map_remove_args                // the list of argument types above
 };
 
 const psl_DataType map_reload_args [] = {psl_string, psl_integer};
@@ -140,11 +151,72 @@ map_add(psl_Value *ResultLocation, const psl_Value *const *Arguments)
     if (fp)
     {
         fprintf(fp, "%s\n", val);
-        free(path);
-        free(val);
         ResultLocation->i = 0;
         fclose(fp);
     }
+    free(path);
+    free(val);
+    return true;
+}
+
+//
+// Remove a line from the given file
+bool
+map_remove(psl_Value *ResultLocation, const psl_Value *const *Arguments)
+{
+    char *path;
+    char *val;
+    FILE *fp;
+    FILE *fp1;
+    char *pathn;
+    char *line;
+    size_t ls = 1024;
+    ssize_t rs;
+    ResultLocation->i = -1;
+
+    if (!Arguments[0] || !Arguments[1])
+        return false;
+    path =_getPath(&Arguments[0]->s);
+    if (!path)
+        return false;
+    pathn = malloc(strlen(path) + 4);
+    if (pathn)
+    {
+        sprintf(pathn, "%s.bak", path);
+        val = SandScriptStringToCString(&Arguments[1]->s);
+
+        fp = fopen(path, "r");
+
+        if (fp)
+        {
+            fp1 = fopen(pathn, "w");
+            if (fp1)
+            {
+                line = malloc(ls);
+                do
+                {
+                    rs =  getline(&line, &ls, fp);
+                    if (rs > 0)
+                    {
+                        strtok(line, "\n");
+                        // If match, skip
+                        if (strcmp(line, val))
+                            fprintf(fp1, "%s\n", line);
+                    }
+                }
+                while (rs > 0);
+                fclose(fp1);
+                rename(pathn, path);
+
+                ResultLocation->i = 0;
+                free(line);
+            }
+            fclose(fp);
+        }
+        free(pathn);
+        free(val);
+    }
+    free(path);
     return true;
 }
 
@@ -166,7 +238,7 @@ map_reload(psl_Value *ResultLocation, const psl_Value *const *Arguments)
     int status;
     if (pid == 0)
     {
-        char *argv[2];
+        char *argv[3];
         argv[0] = "pdbClient";
         argv[1] = "-c";
         argv[2] = "devices/policyMaps/1/config/reloading true";
@@ -224,6 +296,7 @@ map_instance(psl_Value *ResultLocation, const psl_Value *const *Arguments)
 static const psl_FunctionDescription* functions [] = {
      &map_zero_fn,
      &map_add_fn,
+     &map_remove_fn,
      &map_reload_fn,
      &map_instance_fn
 };
