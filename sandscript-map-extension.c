@@ -241,7 +241,7 @@ map_reload(psl_Value *ResultLocation, const psl_Value *const *Arguments)
         char *argv[4];
         argv[0] = "pdbClient";
         argv[1] = "-c";
-        argv[2] = "devices/policyMaps/1/config/reloading true";
+        argv[2] = "set devices/policyMaps/1/config/reloading true";
         argv[3] = 0;
         execve("/usr/local/sandvine/bin/pdbClient.bin",argv,environ);
     }
