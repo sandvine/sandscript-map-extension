@@ -17,17 +17,28 @@
 #include "sandscript-map-extension.h"
 #include <sys/wait.h>
 #include <fcntl.h>
+#include <stdarg.h>
 
 // required interface
 psl_GetEventManifest GetEventManifest;
 psl_GetManifest GetManifest;
 
+static int _map_debug;
+
+static void MAP_DEBUG(int level, const char * fmt, ...)
+{
+    va_list args;
+    va_start(args,fmt);
+    if (level >= _map_debug)
+        vsyslog(LOG_INFO, fmt, args);
+}
 
 static psl_Function map_zero;
 static psl_Function map_add;
 static psl_Function map_remove;
 static psl_Function map_reload;
 static psl_Function map_instance;
+static psl_Function map_debug;
 
 const psl_DataType map_zero_args [] = {psl_string};
 const psl_FunctionDescription map_zero_fn = {
@@ -79,6 +90,16 @@ const psl_FunctionDescription map_instance_fn = {
     map_instance_args              // the list of argument types above
 };
 
+const psl_DataType map_debug_args [] = {psl_integer};
+const psl_FunctionDescription map_debug_fn = {
+    "extension.map.debug",         // SandScript name
+    psl_Flag_Pure,                 // flags. Currently only Pure is available.
+    map_debug,                     // function to call
+    psl_integer,                   // return type
+    NELEM(map_debug_args),         // length of arguments list
+    map_debug_args                 // the list of argument types above
+};
+
 char *
 SandScriptStringToCString(const psl_stringRef *arg)
 {
@@ -128,6 +149,9 @@ map_zero(psl_Value *ResultLocation, const psl_Value *const *Arguments)
 
     if (truncate(path, 0) < 0)
         ResultLocation->i = -1;
+
+    MAP_DEBUG(1, "map: truncate(%d) <%s>", ResultLocation->i, path);
+
     free(path);
     return true;
 }
@@ -154,6 +178,7 @@ map_add(psl_Value *ResultLocation, const psl_Value *const *Arguments)
         ResultLocation->i = 0;
         fclose(fp);
     }
+    MAP_DEBUG(2, "map: add(%d) <%s> to <%s>", ResultLocation->i, val, path);
     free(path);
     free(val);
     return true;
@@ -206,13 +231,13 @@ map_remove(psl_Value *ResultLocation, const psl_Value *const *Arguments)
                 }
                 while (rs > 0);
                 fclose(fp1);
-                rename(pathn, path);
+                ResultLocation->i = rename(pathn, path);
 
-                ResultLocation->i = 0;
                 free(line);
             }
             fclose(fp);
         }
+        MAP_DEBUG(2, "map: remove(%d) <%s> from <%s>", ResultLocation->i, val, path);
         free(pathn);
         free(val);
     }
@@ -247,6 +272,7 @@ map_reload(psl_Value *ResultLocation, const psl_Value *const *Arguments)
     }
     waitpid(pid, &status, 0);
     ResultLocation->i = status;
+    MAP_DEBUG(2, "map: reload (%d)", ResultLocation->i);
 
     return true;
 }
@@ -293,13 +319,26 @@ map_instance(psl_Value *ResultLocation, const psl_Value *const *Arguments)
     return true;
 }
 
+//
+// Set the debug level to the integer passed. 0 to disable
+bool
+map_debug(psl_Value *ResultLocation, const psl_Value *const *Arguments)
+{
+    ResultLocation->i = 0;
+
+    if (!Arguments[0])
+        return false;
+    _map_debug = Arguments[0]->i;
+    return true;
+}
 
 static const psl_FunctionDescription* functions [] = {
      &map_zero_fn,
      &map_add_fn,
      &map_remove_fn,
      &map_reload_fn,
-     &map_instance_fn
+     &map_instance_fn,
+     &map_debug_fn
 };
 
 static psl_Manifest manifest = {

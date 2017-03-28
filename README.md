@@ -34,3 +34,8 @@ is the map to reload, the second is the instance (or -1 for
 all instances) to reload on. **NEITHER IS CURRENTLY IMPLEMENTED**
 Calling this method will reload all maps on all instances.
 
+You can enable some tracing with
+
+    extension.map.debug(int level)
+
+0 will disable all. 1-N will enable more tracing (to syslog)
