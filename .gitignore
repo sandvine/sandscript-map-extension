@@ -1,2 +1,5 @@
 a.out
 *.rpm
+sandscript-library-interface/
+sandscript-map-extension.5
+sandscript-map-extension.so
