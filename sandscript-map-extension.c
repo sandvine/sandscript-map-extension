@@ -104,6 +104,8 @@ char *
 SandScriptStringToCString(const psl_stringRef *arg)
 {
     char *p = 0;
+    if (!arg || !arg->begin)
+        return p;
     if (arg->length >= 0)
     {
         p = malloc(arg->length+1);
@@ -143,7 +145,7 @@ map_zero(psl_Value *ResultLocation, const psl_Value *const *Arguments)
     char *path;
     ResultLocation->i = 0;
 
-    if (!Arguments[0])
+    if (!Arguments[0] || !Arguments[0]->s.begin)
         return false;
     path =_getPath(&Arguments[0]->s);
 
