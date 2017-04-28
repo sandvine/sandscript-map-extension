@@ -43,7 +43,7 @@ static psl_Function map_debug;
 const psl_DataType map_zero_args [] = {psl_string};
 const psl_FunctionDescription map_zero_fn = {
     "extension.map.zero",          // SandScript name
-    psl_Flag_Pure,                 // flags. Currently only Pure is available.
+    0,                             // flags. Currently only Pure is available.
     map_zero,                      // function to call
     psl_integer,                   // return type
     NELEM(map_zero_args),          // length of arguments list
@@ -53,7 +53,7 @@ const psl_FunctionDescription map_zero_fn = {
 const psl_DataType map_add_args [] = {psl_string,psl_string};
 const psl_FunctionDescription map_add_fn = {
     "extension.map.add",           // SandScript name
-    psl_Flag_Pure,                 // flags. Currently only Pure is available.
+    0,                             // flags. Currently only Pure is available.
     map_add,                       // function to call
     psl_integer,                   // return type
     NELEM(map_add_args),           // length of arguments list
@@ -63,7 +63,7 @@ const psl_FunctionDescription map_add_fn = {
 const psl_DataType map_remove_args [] = {psl_string,psl_string};
 const psl_FunctionDescription map_remove_fn = {
     "extension.map.remove",        // SandScript name
-    psl_Flag_Pure,                 // flags. Currently only Pure is available.
+    0,                             // flags. Currently only Pure is available.
     map_remove,                    // function to call
     psl_integer,                   // return type
     NELEM(map_remove_args),        // length of arguments list
@@ -73,7 +73,7 @@ const psl_FunctionDescription map_remove_fn = {
 const psl_DataType map_reload_args [] = {psl_string, psl_integer};
 const psl_FunctionDescription map_reload_fn = {
     "extension.map.reload",        // SandScript name
-    psl_Flag_Pure,                 // flags. Currently only Pure is available.
+    0,                             // flags. Currently only Pure is available.
     map_reload,                    // function to call
     psl_integer,                   // return type
     NELEM(map_reload_args),        // length of arguments list
@@ -93,7 +93,7 @@ const psl_FunctionDescription map_instance_fn = {
 const psl_DataType map_debug_args [] = {psl_integer};
 const psl_FunctionDescription map_debug_fn = {
     "extension.map.debug",         // SandScript name
-    psl_Flag_Pure,                 // flags. Currently only Pure is available.
+    0,                             // flags. Currently only Pure is available.
     map_debug,                     // function to call
     psl_integer,                   // return type
     NELEM(map_debug_args),         // length of arguments list
