@@ -25,7 +25,8 @@ psl_GetManifest GetManifest;
 
 static int _map_debug;
 
-static void MAP_DEBUG(int level, const char * fmt, ...)
+static void
+MAP_DEBUG(int level, const char * fmt, ...)
 {
     va_list args;
     va_start(args,fmt);
@@ -40,8 +41,8 @@ static psl_Function map_reload;
 static psl_Function map_instance;
 static psl_Function map_debug;
 
-const psl_DataType map_zero_args [] = {psl_string};
-const psl_FunctionDescription map_zero_fn = {
+static const psl_DataType map_zero_args [] = {psl_string};
+static const psl_FunctionDescription map_zero_fn = {
     "extension.map.zero",          // SandScript name
     0,                             // flags. Currently only Pure is available.
     map_zero,                      // function to call
@@ -50,8 +51,8 @@ const psl_FunctionDescription map_zero_fn = {
     map_zero_args                  // the list of argument types above
 };
 
-const psl_DataType map_add_args [] = {psl_string,psl_string};
-const psl_FunctionDescription map_add_fn = {
+static const psl_DataType map_add_args [] = {psl_string,psl_string};
+static const psl_FunctionDescription map_add_fn = {
     "extension.map.add",           // SandScript name
     0,                             // flags. Currently only Pure is available.
     map_add,                       // function to call
@@ -60,8 +61,8 @@ const psl_FunctionDescription map_add_fn = {
     map_add_args                   // the list of argument types above
 };
 
-const psl_DataType map_remove_args [] = {psl_string,psl_string};
-const psl_FunctionDescription map_remove_fn = {
+static const psl_DataType map_remove_args [] = {psl_string,psl_string};
+static const psl_FunctionDescription map_remove_fn = {
     "extension.map.remove",        // SandScript name
     0,                             // flags. Currently only Pure is available.
     map_remove,                    // function to call
@@ -70,8 +71,8 @@ const psl_FunctionDescription map_remove_fn = {
     map_remove_args                // the list of argument types above
 };
 
-const psl_DataType map_reload_args [] = {psl_string, psl_integer};
-const psl_FunctionDescription map_reload_fn = {
+static const psl_DataType map_reload_args [] = {psl_string, psl_integer};
+static const psl_FunctionDescription map_reload_fn = {
     "extension.map.reload",        // SandScript name
     0,                             // flags. Currently only Pure is available.
     map_reload,                    // function to call
@@ -80,8 +81,8 @@ const psl_FunctionDescription map_reload_fn = {
     map_reload_args                // the list of argument types above
 };
 
-const psl_DataType map_instance_args [] = {};
-const psl_FunctionDescription map_instance_fn = {
+static const psl_DataType map_instance_args [] = {};
+static const psl_FunctionDescription map_instance_fn = {
     "extension.map.instance",      // SandScript name
     psl_Flag_Pure,                 // flags. Currently only Pure is available.
     map_instance,                  // function to call
@@ -90,8 +91,8 @@ const psl_FunctionDescription map_instance_fn = {
     map_instance_args              // the list of argument types above
 };
 
-const psl_DataType map_debug_args [] = {psl_integer};
-const psl_FunctionDescription map_debug_fn = {
+static const psl_DataType map_debug_args [] = {psl_integer};
+static const psl_FunctionDescription map_debug_fn = {
     "extension.map.debug",         // SandScript name
     0,                             // flags. Currently only Pure is available.
     map_debug,                     // function to call
@@ -100,7 +101,7 @@ const psl_FunctionDescription map_debug_fn = {
     map_debug_args                 // the list of argument types above
 };
 
-char *
+static char *
 SandScriptStringToCString(const psl_stringRef *arg)
 {
     char *p = 0;
@@ -139,7 +140,7 @@ _getPath(const psl_stringRef *arg)
 
 //
 // Take the given file and zero it
-bool
+static bool
 map_zero(psl_Value *ResultLocation, const psl_Value *const *Arguments)
 {
     char *path;
@@ -160,7 +161,7 @@ map_zero(psl_Value *ResultLocation, const psl_Value *const *Arguments)
 
 //
 // Add a line to the given file
-bool
+static bool
 map_add(psl_Value *ResultLocation, const psl_Value *const *Arguments)
 {
     char *path;
@@ -188,7 +189,7 @@ map_add(psl_Value *ResultLocation, const psl_Value *const *Arguments)
 
 //
 // Remove a line from the given file
-bool
+static bool
 map_remove(psl_Value *ResultLocation, const psl_Value *const *Arguments)
 {
     char *path;
@@ -255,7 +256,7 @@ map_remove(psl_Value *ResultLocation, const psl_Value *const *Arguments)
 //
 // NB: *** *** *** These parameters are ignored, it reloads all maps
 //
-bool
+static bool
 map_reload(psl_Value *ResultLocation, const psl_Value *const *Arguments)
 {
     // We don't want to copy the memory space. Could use vfork or clone
@@ -283,7 +284,7 @@ map_reload(psl_Value *ResultLocation, const psl_Value *const *Arguments)
 // This is a bit of a work-around. Get the instance-id by processing
 // /proc/<mypid>/cmdline and look for -instance #
 // If not present return 0. If present, return the #
-bool
+static bool
 map_instance(psl_Value *ResultLocation, const psl_Value *const *Arguments)
 {
 
@@ -323,7 +324,7 @@ map_instance(psl_Value *ResultLocation, const psl_Value *const *Arguments)
 
 //
 // Set the debug level to the integer passed. 0 to disable
-bool
+static bool
 map_debug(psl_Value *ResultLocation, const psl_Value *const *Arguments)
 {
     ResultLocation->i = 0;
