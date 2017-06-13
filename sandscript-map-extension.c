@@ -19,6 +19,8 @@
 #include <fcntl.h>
 #include <stdarg.h>
 
+extern char **environ;
+
 // required interface
 psl_GetEventManifest GetEventManifest;
 psl_GetManifest GetManifest;
