@@ -1,3 +1,7 @@
+stages:
+  - build
+  - cross
+
 cache:
   key: "$CI_BUILD_REF"
   untracked: true
@@ -10,6 +14,7 @@ rpm:
   - centos_build:7
   stage: build
   script:
+  - echo "Started at $(date -Iseconds)"
   - rm -rf sandscript-library-interface
   - make clean
   - make
@@ -19,16 +24,23 @@ rpm:
     paths:
     - sandscript-map-extension*.rpm
 
-#unittest:
-#  tags:
-#  - centos_build:7
-######  stage: test
-#  before_script:
-#  - yum -y install openpgm-devel python34-devel python34-Cython
-#  script:
-#  - yum -y install sandscript-zmq*.rpm
-#  - LD_LIBRARY_PATH=$PWD/czmq/src/.libs:$PWD/libzmq/src/.libs && cd tests && make && ./unit-test
-#  only:
-#  - master
-#
+freebsd:
+  tags:
+  - freebsd-build
+  stage: cross
+  script:
+  - make
+  - mkdir -p /tmp/freebsd-pkg/lib /tmp/freebsd-pkg/sandvine/loadable
+  - cp -f sandscript-map-extension.so /tmp/freebsd-pkg/sandvine/loadable/sandscript-map-extension.so
+  - cp -f freebsd-pkg/* /tmp/freebsd-pkg
+  - sed -i -e "s?VERSION?$(cat VERSION)?" /tmp/freebsd-pkg/+CONTENTS
+  - rm -f sandscript-map-extension-$(cat VERSION).tar sandscript-map-extension-$(cat VERSION).bz2
+  - (P=$(pwd); cd /tmp/freebsd-pkg; tar cf $P/sandscript-map-extension-$(cat $P/VERSION).tar .)
+  - bzip2 -c sandscript-map-extension-$(cat VERSION).tar > sandscript-map-extension-$(cat VERSION).bz2
+  artifacts:
+    paths:
+    - sandscript-map-extension*bz2
+  artifacts:
+    paths:
+    - sandscript-map-extension*bz2
 

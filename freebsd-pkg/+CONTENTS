@@ -1,0 +1,32 @@
+@comment PKG_FORMAT_REVISION:1.1
+@comment ORIGIN:sandvine/sandscript-map-extension
+@name sandscript-map-extension-VERSION
+@owner bin
+@group bin
+@cwd /usr/local
+@mode a=r
+sandvine/loadable/sandscript-map-extension.so
+@cwd .
+@ignore
++COMMENT
+@exec chown root:wheel +COMMENT
+@ignore
++DESC
+@exec chown root:wheel +DESC
+@ignore
++INSTALL
+@exec chown root:wheel +INSTALL
+@ignore
++POST-INSTALL
+@exec chown root:wheel +POST-INSTALL
+@ignore
++DEINSTALL
+@exec chown root:wheel +DEINSTALL
+@ignore
++POST-DEINSTALL
+@exec chown root:wheel +POST-DEINSTALL
+@ignore
++DISPLAY
+@display +DISPLAY
+@exec chown root:wheel +DISPLAY
+

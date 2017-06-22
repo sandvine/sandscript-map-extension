@@ -1,0 +1,4 @@
+#!/bin/sh
+# this script will be run after de-install
+
+exit 0
